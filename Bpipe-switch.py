@@ -1,62 +1,41 @@
-#!/usr/bin/env python
-# This script measures the number of times two processes can exchange an increasing integer through a pipe
-# Adapted from: http://www.roman10.net/named-pipe-in-linux-with-a-python-example/
-
+#!/usr/bin/python
 import os
 import time
 
-rPipe = "./p1"	# read pipe
-wPipe = "./p2"	# write pipe
-value = 0
-
-# create pipe if it doesn't exist
-try: 
-	os.mkfifo(wPipe)
-	os.mkfifo(rPipe)
+#communicate with another process through named pipe
+#one for receive command, the other for send command
+rPipe = "./p1"
+wPipe = "./p2"
+try:
+    os.mkfifo(wPipe)
+    os.mkfifo(rPipe)
 except OSError:
-	print "OSError... continuing."
-	pass
+    pass
 
-# read value from pipe, if null write 1
-#print "opening rPipe"
-#r = open(rPipe, 'r')
-#rVal = r.read()
-#print "rVal = " + str(rVal)
-#r.close()
+r = open(rPipe, 'r')
+value = r.read()
+r.close()
 
-
-#if rVal is None:
-#	print "rVal is null... writing 1"
-#	print "opening wPipe"
-#	w = open(wPipe, 'w')
-#	w.write("1")
-#	w.close()
-
-# enter while loop and wait for input
-# start timer, increment value read, write that value back to the pipe
-#print "value = " + str(value) + " and rVal = " + str(rVal)
-print "creating timeout..."
-timeout = time.time() + 10		# timeout ends in 10 seconds
+# create timer and timeout value (10 seconds)
+timeout = time.time() + 10
+# enter while loop and respond
 while True:
-	# read the new value
-	r = open(rPipe, 'r')
-	rVal = r.read()
-	r.close()
+	#print "time.time() > timeout ---> " + str(time.time()) + " > " + str(timeout)
 	if time.time() > timeout:
+		print "Timeout reached"
 		w = open(wPipe, 'w')
-		print "Ending timer..."
-		w.write("9999999999")
+		w.write("99999999")
 		w.close()
 		break
-	# if the new value is > the original, set the original to the new one
-	if rVal > value:
-		value = rVal
-		#print "New value = " + str(value)
-		w = open(wPipe, 'w')
-		newVal = int(value)+1
-		print "New value ====== " + str(newVal)
-		w.write(str(newVal))
-		w.close()
-		# exit the while loop when the timer reaches 10 seconds
 		
-print "Done."
+	w = open(wPipe, 'w')
+	newVal = int(value) + 1
+	w.write(str(newVal))
+	w.close()
+	r = open(rPipe, 'r')
+	value = r.read()
+	#print "Value: " + str(value)
+	r.close()
+	#time.sleep(1)
+
+print "Final response: " + str(value)
