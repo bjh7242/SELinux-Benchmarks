@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# adapted from: http://www.roman10.net/named-pipe-in-linux-with-a-python-example/
 import os
 
 # wPipe = write pipe, rPipe = read pipe

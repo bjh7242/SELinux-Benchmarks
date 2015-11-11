@@ -1,9 +1,12 @@
 #!/usr/bin/python
+# measure the highest integer that can be pushed between 2 pipes in 10 seconds
+# adapted from: http://www.roman10.net/named-pipe-in-linux-with-a-python-example/
+
 import os
 import time
 
-#communicate with another process through named pipe
-#one for receive command, the other for send command
+# communicate with another process through named pipe
+# one for receive command, the other for send command
 rPipe = "./p1"
 wPipe = "./p2"
 try:
