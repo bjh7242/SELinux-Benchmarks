@@ -2,11 +2,15 @@
 
 # generate 2 random chars, 1 to change and 1 to be the new value
 # use sed to modify the original char to the value of the new one
+# requires openssl and sed
 
-OLD=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-1};echo;`
-NEW=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-1};echo;`
+OLD=`openssl rand -base64 1 | cut -c1`
+NEW=`openssl rand -base64 1 | cut -c1`
 
-echo "OLD LETTER: $OLD"
-echo "NEW LETTER: $NEW"
-
-sed -i s/$OLD/$NEW/g text
+# if $NEW or $OLD = "/", sed will throw an error
+if [ $NEW != "/" ] && [ $OLD != "/" ]
+then
+	#echo "OLD CHARACTER: $OLD"
+	#echo "NEW CHARACTER: $NEW"
+	sed -i s/$OLD/$NEW/g text
+fi
