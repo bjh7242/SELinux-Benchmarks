@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Measures the number of execl calls and averages it out per second over 10 seconds
+# Measures the number of execl calls and averages it out per second over 5 seconds
 
 import os
 import time
